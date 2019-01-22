@@ -14,8 +14,6 @@ const initialState = {
 export default function reducer(state, action){
     if(!state)state=initialState;
     const { type, data } = action;
-    console.log('state = ', state);
-    console.log('data = ', data);
     switch (type){
         case GET_MOVIES:
             return {
