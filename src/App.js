@@ -1,56 +1,33 @@
-import React, { Component} from 'react';
-import InfiniteScroll from "react-infinite-scroll-component";
-import MovieList from "./components/MovieList";
-import Search from "./components/Search";
-import {getMovies} from './actions'
+import React from 'react';
+import Provider from "react-redux/es/components/Provider";
+import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import Preview from "./components/Preview";
+import NotFound from "./components/NotFound";
+import MovieList from './components/MovieList';
+
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import { save, load } from 'redux-localstorage-simple';
+import rootReducer from './rootReducer';
 
 import './styles/app.scss';
 
-class App extends Component{
-    constructor (props){
-        super(props);
-        this.store = this.props.store;
-    }
+const middleware = [thunk];
+const store = createStore(rootReducer, load(), applyMiddleware(...middleware, save()));
 
-    componentDidMount() {
-        this.unsubscribe = this.store.subscribe(()=>this.forceUpdate());
-    }
 
-    componentWillUnmount() {
-        this.unsubscribe();
-    }
-
-    fetchMoreData = (str, page = 0) => {
-        this.store.dispatch(getMovies(str, page+1));
-    };
-
-    render() {
-        const store = this.store.getState();
-
-        return (
-            <div>
-                <Search getSearchResult={this.fetchMoreData} changeSearchQuery = {this.fetchMoreData} store = {this.store}/>
-                {
-                (store.movies.moviesLoaded) ?
-                    <InfiniteScroll
-                        dataLength={store.movies.results.length}
-                        isLoading={store.movies.moviesLoaded}
-                        next={this.fetchMoreData.bind(this, store.movies.searchQuery, store.movies.page)}
-                        hasMore={store.movies.hasMore}
-                        loader={store.movies.isLoading ? <h4>Loading...</h4> : null}
-                        endMessage={
-                            <p style={{textAlign: 'center'}}>
-                                <b>You have seen all movies</b>
-                            </p>
-                        }
-                    >
-                        <MovieList movies={store.movies.results}/>
-                    </InfiniteScroll>
-                : null
-                }
-            </div>
-        )
-    }
-}
+const App = () => {
+    return(
+        <Provider store={store}>
+            <Router>
+                <Switch>
+                    <Route exact path='/' render={ () => <MovieList store={store}/>}/>
+                    <Route path='/preview/:id' render={ (props) => <Preview {...props}/>}/>
+                    <Route path='*' component={NotFound} />
+                </Switch>
+            </Router>
+        </Provider>
+    )
+};
 
 export default App;

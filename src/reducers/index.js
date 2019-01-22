@@ -3,10 +3,12 @@ import {GET_MOVIES, GET_MOVIE, CLEAR_LOCAL_STORAGE_MOVIES} from '../actions'
 const initialState = {
     results: [],
     moviesLoaded: false,
+    movieLoaded: false,
     searchQuery:'',
     page: null,
     pageCount: null,
-    hasMore: true
+    hasMore: true,
+    movie: []
 };
 
 export default function reducer(state, action){
@@ -26,12 +28,13 @@ export default function reducer(state, action){
             };
 
         case GET_MOVIE:
-            return [];
+            return {
+                movie: data,
+                movieLoaded: true
+            };
 
         case CLEAR_LOCAL_STORAGE_MOVIES:
-
             return initialState;
-
 
         default:
             return state;
