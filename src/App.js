@@ -15,7 +15,6 @@ import './styles/app.scss';
 const middleware = [thunk];
 const store = createStore(rootReducer, load(), applyMiddleware(...middleware, save()));
 
-
 const App = () => {
     return(
         <Provider store={store}>

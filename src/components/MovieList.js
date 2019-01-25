@@ -4,7 +4,7 @@ import Search from "./Search";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {getMovies} from '../actions'
 
-export default class MovieList extends Component {
+class MovieList extends Component {
     constructor (props){
         super(props);
         this.store = this.props.store;
@@ -56,3 +56,5 @@ export default class MovieList extends Component {
         )
     }
 }
+
+export default MovieList;

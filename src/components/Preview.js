@@ -1,18 +1,20 @@
 import React, { Component } from 'react';
 import {movieUrl, apiKey} from './../appSettings';
+import PropTypes from 'prop-types';
 
 import '../styles/preview.scss';
 
-export default class Preview extends Component {
+class Preview extends Component {
     constructor (props){
         super(props);
         this.state = {
             movie: {}
         };
     }
+
     getAdditionalData(id){
         fetch(`${movieUrl}/${id}?api_key=${apiKey}`)
-            .then(res => res.json())
+            .then(res => res.json()).catch(error => console.log('Get movie by id =', id ,'\n Error =', error))
             .then(
                 res => {
                     this.setState({
@@ -35,7 +37,16 @@ export default class Preview extends Component {
                         <span className="overview">{this.state.movie.overview}</span>
                     </div>
                 </div>
-                : null
+            : null
         )
     }
 }
+
+Preview.propTypes = {
+    movie: PropTypes.shape({
+        title: PropTypes.string,
+        overview: PropTypes.string
+    })
+};
+
+export default Preview;
