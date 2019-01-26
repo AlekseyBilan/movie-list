@@ -7,21 +7,16 @@ import CutTextOverflow from './CutTextOverflow';
 import {imagesPath} from './../appSettings';
 
 class MovieListItem extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            container: {},
-            loaded: false
-        }
-    }
 
     componentDidMount() {
-        this.setState({
-            container: this.refs.overview,
-            loaded: true
-        });
+        this.checkTextOverflow(this.props.movie);
     }
+
+    checkTextOverflow = (movie) => {
+        if(this.refs.overview.clientHeight > 155){
+            this.refs.overview.innerHTML = CutTextOverflow({text:movie.overview, container:this.refs.overview, contentLoaded:true, height:'155', returnText:true});
+        }
+    };
 
     render(){
         let movie = this.props.movie, src = imagesPath+movie.poster_path, title = movie.title;
@@ -36,7 +31,7 @@ class MovieListItem extends Component {
                 <div className="about-movie-content">
                     <h4 className="movie-title">{title}</h4>
                     <span className="overview" ref="overview">
-                        <CutTextOverflow text={movie.overview} container={this.state.container} contentLoaded={this.state.loaded}/>
+                        {movie.overview}
                     </span>
                     <div className="actions-wrap">
                         <Link to={'/preview/'+movie.id}>
