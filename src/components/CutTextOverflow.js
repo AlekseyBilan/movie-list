@@ -11,7 +11,6 @@ function CutTextOverflow(props){
     };
 
     let getLineHeight = (element) => {
-        //debugger;
         let lineHeight = window.getComputedStyle(element)['line-height'];
         if (lineHeight === 'normal' || !lineHeight) {
             return 1.3 * parseFloat(window.getComputedStyle(element)['font-size']);
@@ -21,24 +20,18 @@ function CutTextOverflow(props){
     };
 
     let getCutText = () => {
-        let resultTextStr = '', defTextStr = props.text, container = props.container;
+        let defTextStr = props.text, container = props.container;
         let height = props.height || container.clientHeight;
-        let lines = parseInt((0.9 * height)/parseInt(getLineHeight(container)));
+        let lines = parseInt(height/parseInt(getLineHeight(container)));
+        let resultWidth = Math.floor((lines-1) * container.clientWidth);
         let font = window.getComputedStyle(container)['font-weight']+' '+ window.getComputedStyle(container)['font-size']+' '+ window.getComputedStyle(container)['font-family'];
-
-        let words = defTextStr.split(' ');
-        while (lines > 0) {
-            let lineTextStr = '';
-            while(getTextWidth(lineTextStr, font) <= container.clientWidth && words.length > 0){
-                lineTextStr += ' ' + words.shift();
-            }
-            if( lines === 1 && words.length > 0) lineTextStr += ' ...';
-            resultTextStr += lineTextStr;
-            --lines;
+        while(getTextWidth(defTextStr, font) >= resultWidth){
+            defTextStr = defTextStr.slice(0, -5);
         }
 
-        return resultTextStr;
+        return defTextStr + ' ...';
     };
+
     let getLayout = () => {
         if(props.returnText && props.contentLoaded){
             return getCutText()
@@ -46,6 +39,7 @@ function CutTextOverflow(props){
             return <Fragment>{getCutText()}</Fragment>
         }
     };
+
     return getLayout();
 }
 

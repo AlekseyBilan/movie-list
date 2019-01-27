@@ -4,7 +4,7 @@ import { Link  } from "react-router-dom";
 
 import Button from './Button';
 import CutTextOverflow from './CutTextOverflow';
-import {imagesPath} from './../appSettings';
+import {imagesPath, movieOverviewContainerHeight} from './../appSettings';
 
 class MovieListItem extends Component {
 
@@ -13,8 +13,8 @@ class MovieListItem extends Component {
     }
 
     checkTextOverflow = (movie) => {
-        if(this.refs.overview.clientHeight > 155){
-            this.refs.overview.innerHTML = CutTextOverflow({text:movie.overview, container:this.refs.overview, contentLoaded:true, height:'155', returnText:true});
+        if(this.refs.overview.clientHeight > movieOverviewContainerHeight){
+            this.refs.overview.innerHTML = CutTextOverflow({text:movie.overview, container:this.refs.overview, contentLoaded:true, height:movieOverviewContainerHeight, returnText:true});
         }
     };
 
