@@ -7,7 +7,7 @@ export const CLEAR_LOCAL_STORAGE_MOVIES = 'CLEAR_LOCAL_STORAGE_MOVIES';
 export function getMovies(searchQuery, currentPage) {
     return async function (dispatch) {
         try {
-            const result = await fetch(`${getMoviesUrl}?api_key=${apiKey}&language=${language}&query=${searchQuery}&page=${currentPage}`);
+            const result = await fetch(`${getMoviesUrl}?api_key=${apiKey}&language=${language}&query=${searchQuery}&page=${currentPage}&sort_by=vote_average.desc`);
             const movies = await result.json();
             return dispatch({
                 type: GET_MOVIES,
